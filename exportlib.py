@@ -78,7 +78,7 @@ AS_FUNC = {
 class ExportList(dict):
 		
 
-	def __init__( self, var, file_name = 'varlib', ext = 'py',
+	def __init__( self, var = None, file_name = 'varlib', ext = 'py',
 	
 		export_as = 'tuple', mode = 'w',	
 
@@ -113,6 +113,8 @@ class ExportList(dict):
 		self.new_line_buffer = new_line_buffer
 
 		self.reveal_afterwards = reveal_afterwards
+		
+		self.esported = False
 
 
 	def __setattr__(self, name, value):
@@ -155,8 +157,12 @@ class ExportList(dict):
 		return var_name
 
 	def export(self):
+		if self.esported:
+			print("Can't export list more thatn once!")
+			return
 		content = self.export_func(**self)
 		self.write(content)
+		self.esported = True
 
 	def write(self, content):
 		with open(self.path, self.mode, encoding = self.encoding) as file:
